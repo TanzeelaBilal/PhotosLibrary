@@ -1,11 +1,6 @@
 package com.assessment.photoslibrary.viewmodel.list
 
-import android.app.Application
-import android.content.Context
 import android.graphics.Bitmap
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,10 +16,8 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class MainViewModel @Inject constructor
-    (
-    private val repository: Repository,
-    application: Application
+class MainViewModel @Inject constructor(
+    private val repository: Repository
 ) : ViewModel() {
 
     private val _response: MutableLiveData<NetworkResult<DogResponse>> = MutableLiveData()

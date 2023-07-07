@@ -15,7 +15,6 @@ import coil.request.Disposable
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 import com.assessment.photoslibrary.R
-import com.assessment.photoslibrary.databinding.FragmentPhotosListBinding
 import com.assessment.photoslibrary.utils.NetworkResult
 import com.assessment.photoslibrary.viewmodel.list.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
