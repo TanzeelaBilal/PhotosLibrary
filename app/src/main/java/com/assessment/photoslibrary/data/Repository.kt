@@ -1,12 +1,10 @@
-package com.maxi.dogapi.data
+package com.assessment.photoslibrary.data
 
 import android.graphics.Bitmap
-import android.os.Environment
-import androidx.core.content.ContextCompat.getExternalFilesDirs
-import com.maxi.dogapi.data.remote.RemoteDataSource
-import com.maxi.dogapi.model.BaseApiResponse
-import com.maxi.dogapi.model.DogResponse
-import com.maxi.dogapi.utils.NetworkResult
+import com.assessment.photoslibrary.data.remote.RemoteDataSource
+import com.assessment.photoslibrary.model.BaseApiResponse
+import com.assessment.photoslibrary.model.DogResponse
+import com.assessment.photoslibrary.utils.NetworkResult
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

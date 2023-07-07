@@ -1,4 +1,4 @@
-package com.maxi.dogapi.viewmodel
+package com.assessment.photoslibrary.viewmodel
 
 import android.app.Application
 import android.content.Context
@@ -9,9 +9,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.maxi.dogapi.data.Repository
-import com.maxi.dogapi.model.DogResponse
-import com.maxi.dogapi.utils.NetworkResult
+import com.assessment.photoslibrary.data.Repository
+import com.assessment.photoslibrary.model.DogResponse
+import com.assessment.photoslibrary.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

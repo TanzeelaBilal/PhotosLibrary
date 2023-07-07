@@ -1,4 +1,4 @@
-package com.maxi.dogapi.model
+package com.assessment.photoslibrary.model
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,6 +1,6 @@
-package com.maxi.dogapi.model
+package com.assessment.photoslibrary.model
 
-import com.maxi.dogapi.utils.NetworkResult
+import com.assessment.photoslibrary.utils.NetworkResult
 import retrofit2.Response
 
 abstract class BaseApiResponse {

@@ -1,6 +1,5 @@
-package com.maxi.dogapi
+package com.assessment.photoslibrary
 
-import android.content.Context
 import android.os.Bundle
 import android.os.Environment
 import android.view.View
@@ -13,9 +12,9 @@ import coil.load
 import coil.request.Disposable
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
-import com.maxi.dogapi.databinding.ActivityMainBinding
-import com.maxi.dogapi.utils.NetworkResult
-import com.maxi.dogapi.viewmodel.MainViewModel
+import com.assessment.photoslibrary.databinding.ActivityMainBinding
+import com.assessment.photoslibrary.utils.NetworkResult
+import com.assessment.photoslibrary.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 

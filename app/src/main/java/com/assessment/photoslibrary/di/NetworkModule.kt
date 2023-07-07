@@ -1,7 +1,7 @@
-package com.maxi.dogapi.di
+package com.assessment.photoslibrary.di
 
-import com.maxi.dogapi.data.remote.DogService
-import com.maxi.dogapi.utils.Constants.Companion.BASE_URL
+import com.assessment.photoslibrary.data.remote.DogService
+import com.assessment.photoslibrary.utils.Constants.Companion.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,4 +1,4 @@
-package com.maxi.dogapi
+package com.assessment.photoslibrary
 
 import org.junit.Test
 

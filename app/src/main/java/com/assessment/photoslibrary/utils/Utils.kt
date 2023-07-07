@@ -1,4 +1,4 @@
-package com.maxi.dogapi.utils
+package com.assessment.photoslibrary.utils
 
 import android.content.Context
 import android.net.ConnectivityManager

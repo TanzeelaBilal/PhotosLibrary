@@ -1,4 +1,4 @@
-package com.maxi.dogapi.utils
+package com.assessment.photoslibrary.utils
 
 class Constants {
 

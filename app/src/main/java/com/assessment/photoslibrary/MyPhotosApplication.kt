@@ -1,8 +1,8 @@
-package com.maxi.dogapi
+package com.assessment.photoslibrary
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class DogApplication : Application() {
+class MyPhotosApplication : Application() {
 }

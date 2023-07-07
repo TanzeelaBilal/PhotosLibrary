@@ -1,4 +1,4 @@
-package com.maxi.dogapi.utils
+package com.assessment.photoslibrary.utils
 
 sealed class NetworkResult<T>(
     val data: T? = null,

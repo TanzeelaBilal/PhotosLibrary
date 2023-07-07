@@ -1,4 +1,4 @@
-package com.maxi.dogapi.data.remote
+package com.assessment.photoslibrary.data.remote
 
 import javax.inject.Inject
 

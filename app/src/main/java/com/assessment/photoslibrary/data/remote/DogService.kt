@@ -1,7 +1,7 @@
-package com.maxi.dogapi.data.remote
+package com.assessment.photoslibrary.data.remote
 
-import com.maxi.dogapi.model.DogResponse
-import com.maxi.dogapi.utils.Constants
+import com.assessment.photoslibrary.model.DogResponse
+import com.assessment.photoslibrary.utils.Constants
 import retrofit2.Response
 import retrofit2.http.GET
 

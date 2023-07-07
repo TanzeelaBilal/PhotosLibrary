@@ -1,4 +1,4 @@
-package com.maxi.dogapi
+package com.assessment.photoslibrary
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
