@@ -1,6 +1,6 @@
 package com.assessment.photoslibrary.di
 
-import com.assessment.photoslibrary.data.remote.DogService
+import com.assessment.photoslibrary.data.remote.ApiService
 import com.assessment.photoslibrary.utils.Constants.Companion.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -45,7 +45,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideCurrencyService(retrofit: Retrofit): DogService =
-        retrofit.create(DogService::class.java)
+    fun provideCurrencyService(retrofit: Retrofit): ApiService =
+        retrofit.create(ApiService::class.java)
 
 }

@@ -1,4 +1,4 @@
-package com.assessment.photoslibrary.viewmodel
+package com.assessment.photoslibrary.viewmodel.list
 
 import android.app.Application
 import android.content.Context
@@ -8,6 +8,7 @@ import android.net.NetworkCapabilities
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.assessment.photoslibrary.data.Repository
 import com.assessment.photoslibrary.model.DogResponse
@@ -24,7 +25,7 @@ class MainViewModel @Inject constructor
     (
     private val repository: Repository,
     application: Application
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     private val _response: MutableLiveData<NetworkResult<DogResponse>> = MutableLiveData()
     val response: LiveData<NetworkResult<DogResponse>> = _response
@@ -45,23 +46,6 @@ class MainViewModel @Inject constructor
             repository.saveImage(bitmap, dir, fileName).collect { value ->
                 _downloadResponse.value = value
             }
-        }
-    }
-
-
-    private fun hasInternetConnection(): Boolean {
-        val connectivityManager = getApplication<Application>().getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
-
-        val activeNetwork = connectivityManager.activeNetwork ?: return false
-        val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-
-        return when {
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            else -> false
         }
     }
 

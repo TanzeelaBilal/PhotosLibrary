@@ -1,79 +1,85 @@
-package com.assessment.photoslibrary
+package com.assessment.photoslibrary.ui.fragment.list
 
 import android.os.Bundle
 import android.os.Environment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toBitmap
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import coil.ImageLoader
 import coil.load
 import coil.request.Disposable
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
-import com.assessment.photoslibrary.databinding.ActivityMainBinding
+import com.assessment.photoslibrary.R
+import com.assessment.photoslibrary.databinding.FragmentPhotosListBinding
 import com.assessment.photoslibrary.utils.NetworkResult
-import com.assessment.photoslibrary.viewmodel.MainViewModel
+import com.assessment.photoslibrary.viewmodel.list.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_photos_list.imgDog
+import kotlinx.android.synthetic.main.fragment_photos_list.pbDog
 import java.io.File
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class PhotosListFragment : Fragment() {
 
-    private val mainViewModel by viewModels<MainViewModel>()
-    private lateinit var _binding: ActivityMainBinding
     private lateinit var disposable: Disposable
     private var imageUrl: String? = null
+    private val viewModel by viewModels<MainViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        _binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(_binding.root)
+    companion object {
+        fun newInstance() = PhotosListFragment()
+    }
 
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         fetchData()
-        _binding.imgRefresh.setOnClickListener {
-            fetchResponse()
-        }
-        _binding.imgDownload.setOnClickListener {
-            downloadImage(imageUrl)
-        }
-        observeDownloadResponse()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return inflater.inflate(R.layout.fragment_photos_list, container, false)
     }
 
     private fun fetchResponse() {
-        mainViewModel.fetchDogResponse()
-        _binding.pbDog.visibility = View.VISIBLE
+        viewModel.fetchDogResponse()
+        pbDog.visibility = View.VISIBLE
     }
 
 
     private fun fetchData() {
         fetchResponse()
-        mainViewModel.response.observe(this) { response ->
+        viewModel.response.observe(this.requireActivity()) { response ->
             when (response) {
                 is NetworkResult.Success -> {
                     response.data?.let {
                         imageUrl = response.data.message
-                        _binding.imgDog.load(
+                        imgDog.load(
                             response.data.message
                         ) {
                             transformations(RoundedCornersTransformation(16f))
                         }
                     }
-                    _binding.pbDog.visibility = View.GONE
+                    pbDog.visibility = View.GONE
                 }
 
                 is NetworkResult.Error -> {
-                    _binding.pbDog.visibility = View.GONE
+                    pbDog.visibility = View.GONE
                     Toast.makeText(
-                        this,
+                        activity,
                         response.message,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
 
                 is NetworkResult.Loading -> {
-                    _binding.pbDog.visibility = View.VISIBLE
+                    pbDog.visibility = View.VISIBLE
                 }
             }
         }
@@ -84,7 +90,7 @@ class MainActivity : AppCompatActivity() {
             /*val di = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!.absolutePath + "/" +
                     resources.getString(R.string.dogs) + "/"*/
 
-           /* val path = getExternalFilesDir(Environment.DIRECTORY_PICTURES)*/
+            /* val path = getExternalFilesDir(Environment.DIRECTORY_PICTURES)*/
             val dirPath = Environment.getExternalStorageDirectory().absolutePath + "/" +
                     resources.getString(R.string.app_name) + "/"
 
@@ -92,11 +98,11 @@ class MainActivity : AppCompatActivity() {
 
             val fileName: String = url.substring(url.lastIndexOf('/') + 1)
 
-            val imageLoader = ImageLoader(this)
-            val request = ImageRequest.Builder(this)
+            val imageLoader = ImageLoader(this.requireActivity())
+            val request = ImageRequest.Builder(this.requireActivity())
                 .data(url)
                 .target { drawable ->
-                    mainViewModel.downloadImage(drawable.toBitmap(), dir, fileName)
+                    viewModel.downloadImage(drawable.toBitmap(), dir, fileName)
                 }
                 .build()
             disposable = imageLoader.enqueue(request)
@@ -104,11 +110,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeDownloadResponse() {
-        mainViewModel.downloadResponse.observe(this) { response ->
+        viewModel.downloadResponse.observe(this) { response ->
             if (response) {
-                Toast.makeText(this, "Saved !!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "Saved !!", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Unable to save image !!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "Unable to save image !!", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -117,4 +123,5 @@ class MainActivity : AppCompatActivity() {
         disposable.dispose()
         super.onDestroy()
     }
+
 }
