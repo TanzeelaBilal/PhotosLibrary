@@ -1,41 +1,48 @@
 package com.assessment.photoslibrary.ui.fragment.list
 
+import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.animation.TranslateAnimation
+import android.widget.AbsListView
+import android.widget.AbsListView.OnScrollListener
 import android.widget.Toast
-import androidx.core.graphics.drawable.toBitmap
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.ListFragment
 import androidx.fragment.app.viewModels
-import coil.ImageLoader
-import coil.request.ImageRequest
 import com.assessment.photoslibrary.R
 import com.assessment.photoslibrary.model.response.PhotoModel
+import com.assessment.photoslibrary.ui.activity.list.PhotosListActivity
 import com.assessment.photoslibrary.ui.adapter.PhotosListAdapter
+import com.assessment.photoslibrary.ui.fragment.detailspage.PhotoDetailsFragment
 import com.assessment.photoslibrary.utils.NetworkResult
 import com.assessment.photoslibrary.viewmodel.list.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_photos_list.list_view
 import kotlinx.android.synthetic.main.fragment_photos_list.pbLoader
-import java.io.File
+
 
 @AndroidEntryPoint
-class PhotosListFragment : Fragment() {
+class PhotosListFragment : ListFragment() {
 
     private var photosListResponse: List<PhotoModel>? = null
     private val viewModel by viewModels<MainViewModel>()
+    private var mCachedVerticalScrollRange = 0
+    private var mQuickReturnHeight = 0
+
+    private val STATE_ONSCREEN = 0
+    private val STATE_OFFSCREEN = 1
+    private val STATE_RETURNING = 2
+    private var mState = STATE_ONSCREEN
+    private var mScrollY = 0
+    private var mMinRawY = 0
+    private var anim: TranslateAnimation? = null
 
     companion object {
         fun newInstance() = PhotosListFragment()
-    }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        fetchData()
     }
 
     override fun onCreateView(
@@ -45,11 +52,11 @@ class PhotosListFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_photos_list, container, false)
     }
 
-    private fun fetchResponse() {
-        viewModel.fetchPhotosResponse()
-        pbLoader.visibility = View.VISIBLE
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setListViewHeader()
+        fetchData()
     }
-
 
     private fun fetchData() {
         fetchResponse()
@@ -58,13 +65,15 @@ class PhotosListFragment : Fragment() {
                 is NetworkResult.Success -> {
                     response.data?.let {
                         photosListResponse = response.data.photos.photo
-                        list_view.adapter =
+                        //setListViewHeader()
+                        listView.adapter =
                             photosListResponse?.let { it1 ->
                                 PhotosListAdapter(
                                     requireContext(),
                                     it1
                                 )
                             }
+                        setListViewListener()
                     }
                     pbLoader.visibility = View.GONE
                 }
@@ -86,37 +95,93 @@ class PhotosListFragment : Fragment() {
         }
     }
 
-    private fun downloadImage(url: String?) {
-        url?.let {
-            /*val di = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!.absolutePath + "/" +
-                    resources.getString(R.string.dogs) + "/"*/
-
-            /* val path = getExternalFilesDir(Environment.DIRECTORY_PICTURES)*/
-            val dirPath = Environment.getExternalStorageDirectory().absolutePath + "/" +
-                    resources.getString(R.string.app_name) + "/"
-
-            val dir = File(dirPath)
-
-            val fileName: String = url.substring(url.lastIndexOf('/') + 1)
-
-            val imageLoader = ImageLoader(this.requireActivity())
-            val request = ImageRequest.Builder(this.requireActivity())
-                .data(url)
-                .target { drawable ->
-                    viewModel.downloadImage(drawable.toBitmap(), dir, fileName)
-                }
-                .build()
-            // disposable = imageLoader.enqueue(request)
-        }
+    private fun fetchResponse() {
+        viewModel.fetchPhotosResponse()
+        pbLoader.visibility = View.VISIBLE
     }
 
-    private fun observeDownloadResponse() {
-        viewModel.downloadResponse.observe(this) { response ->
-            if (response) {
-                Toast.makeText(activity, "Saved !!", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(activity, "Unable to save image !!", Toast.LENGTH_SHORT).show()
+    private fun setListViewHeader() {
+        var mListView = listView
+
+        val header: View = layoutInflater.inflate(R.layout.item_header_listview, null)
+        mListView.addHeaderView(header)
+        mListView.viewTreeObserver.addOnGlobalLayoutListener(
+            OnGlobalLayoutListener {
+                mQuickReturnHeight = header.height
+                mListView.computeScroll()
+                mCachedVerticalScrollRange = mListView.height
+            })
+        mListView.setOnScrollListener(object : OnScrollListener {
+            @SuppressLint("NewApi")
+            override fun onScroll(
+                view: AbsListView?, firstVisibleItem: Int,
+                visibleItemCount: Int, totalItemCount: Int
+            ) {
+                mScrollY = 0
+                var translationY = 0
+
+                mScrollY = mListView.scrollY
+
+                val rawY: Int = (header.top
+                        - Math.min(
+                    mCachedVerticalScrollRange
+                            - mListView.height, mScrollY
+                ))
+                when (mState) {
+                    STATE_OFFSCREEN -> {
+                        if (rawY <= mMinRawY) {
+                            mMinRawY = rawY
+                        } else {
+                            mState = STATE_RETURNING
+                        }
+                        translationY = rawY
+                    }
+
+                    STATE_ONSCREEN -> {
+                        if (rawY < -mQuickReturnHeight) {
+                            mState = STATE_OFFSCREEN
+                            mMinRawY = rawY
+                        }
+                        translationY = rawY
+                    }
+
+                    STATE_RETURNING -> {
+                        translationY = rawY - mMinRawY - mQuickReturnHeight
+                        if (translationY > 0) {
+                            translationY = 0
+                            mMinRawY = rawY - mQuickReturnHeight
+                        }
+                        if (rawY > 0) {
+                            mState = STATE_ONSCREEN
+                            translationY = rawY
+                        }
+                        if (translationY < -mQuickReturnHeight) {
+                            mState = STATE_OFFSCREEN
+                            mMinRawY = rawY
+                        }
+                    }
+                }
+                /** this can be used if the build is below honeycomb  */
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB) {
+                    anim = TranslateAnimation(
+                        0f, 0f, translationY.toFloat(),
+                        translationY.toFloat()
+                    )
+                    anim?.fillAfter = true
+                    anim?.duration = 0
+                    header.startAnimation(anim)
+                } else {
+                    header.translationY = translationY.toFloat()
+                }
             }
+
+            override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {}
+        })
+    }
+
+    private fun setListViewListener() {
+        listView.setOnItemClickListener { parent, view, position, id ->
+            (activity as PhotosListActivity).changeFragment(PhotoDetailsFragment.newInstance())
         }
     }
 }
