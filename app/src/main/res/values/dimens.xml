@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="top_margin">5dp</dimen>
+    <dimen name="card_padding">5dp</dimen>
+    <dimen name="desc_text_size">12sp</dimen>
+    <dimen name="text_heading">20sp</dimen>
+    <dimen name="bottom_margin">100dp</dimen>
+    <dimen name="_30dp">30dp</dimen>
+    <dimen name="_100dp">100dp</dimen>
+    <dimen name="_200dp">200dp</dimen>
+    <dimen name="land_padding">20dp</dimen>
+</resources>

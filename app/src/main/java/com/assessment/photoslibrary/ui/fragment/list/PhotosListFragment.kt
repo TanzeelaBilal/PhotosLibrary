@@ -11,7 +11,6 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import coil.ImageLoader
-import coil.request.Disposable
 import coil.request.ImageRequest
 import com.assessment.photoslibrary.R
 import com.assessment.photoslibrary.model.response.PhotoModel
@@ -26,7 +25,6 @@ import java.io.File
 @AndroidEntryPoint
 class PhotosListFragment : Fragment() {
 
-    private lateinit var disposable: Disposable
     private var photosListResponse: List<PhotoModel>? = null
     private val viewModel by viewModels<MainViewModel>()
 
@@ -108,7 +106,7 @@ class PhotosListFragment : Fragment() {
                     viewModel.downloadImage(drawable.toBitmap(), dir, fileName)
                 }
                 .build()
-            disposable = imageLoader.enqueue(request)
+            // disposable = imageLoader.enqueue(request)
         }
     }
 
@@ -121,10 +119,4 @@ class PhotosListFragment : Fragment() {
             }
         }
     }
-
-    override fun onDestroy() {
-        disposable.dispose()
-        super.onDestroy()
-    }
-
 }

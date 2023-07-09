@@ -2,7 +2,6 @@ package com.assessment.photoslibrary.di
 
 import com.assessment.photoslibrary.data.remote.ApiService
 import com.assessment.photoslibrary.utils.Constants.Companion.BASE_URL
-import com.assessment.photoslibrary.utils.Constants.Companion.BASIC_URL
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -23,8 +22,8 @@ object NetworkModule {
     fun provideHttpClient(): OkHttpClient {
         return OkHttpClient
             .Builder()
-            .readTimeout(30, TimeUnit.SECONDS)
-            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
+            .connectTimeout(15, TimeUnit.SECONDS)
             .build()
     }
 
@@ -39,7 +38,7 @@ object NetworkModule {
         okHttpClient: OkHttpClient
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASIC_URL)
+            .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(
                 GsonConverterFactory.create(
