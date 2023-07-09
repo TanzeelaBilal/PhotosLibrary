@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.assessment.photoslibrary.data.Repository
 import com.assessment.photoslibrary.model.DogResponse
+import com.assessment.photoslibrary.model.response.PhotosListResponse
 import com.assessment.photoslibrary.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
@@ -20,14 +21,14 @@ class MainViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
 
-    private val _response: MutableLiveData<NetworkResult<DogResponse>> = MutableLiveData()
-    val response: LiveData<NetworkResult<DogResponse>> = _response
+    private val _response: MutableLiveData<NetworkResult<PhotosListResponse>> = MutableLiveData()
+    val response: LiveData<NetworkResult<PhotosListResponse>> = _response
 
     private val _downloadResponse: MutableLiveData<Boolean> = MutableLiveData()
     val downloadResponse = _downloadResponse
 
-    fun fetchDogResponse() = viewModelScope.launch {
-        repository.getDog().collect { values ->
+    fun fetchPhotosResponse() = viewModelScope.launch {
+        repository.getPictureList().collect { values ->
             _response.value = values
         }
     }

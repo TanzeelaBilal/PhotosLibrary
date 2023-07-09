@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import com.assessment.photoslibrary.data.remote.RemoteDataSource
 import com.assessment.photoslibrary.model.BaseApiResponse
 import com.assessment.photoslibrary.model.DogResponse
+import com.assessment.photoslibrary.model.response.PhotosListResponse
 import com.assessment.photoslibrary.utils.NetworkResult
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.Dispatchers
@@ -21,9 +22,9 @@ class Repository @Inject constructor(
     private val remoteDataSource: RemoteDataSource
 ) : BaseApiResponse() {
 
-    suspend fun getDog(): Flow<NetworkResult<DogResponse>> {
-        return flow<NetworkResult<DogResponse>> {
-            emit(safeApiCall { remoteDataSource.getDog() })
+    suspend fun getPictureList(): Flow<NetworkResult<PhotosListResponse>> {
+        return flow<NetworkResult<PhotosListResponse>> {
+            emit(safeApiCall { remoteDataSource.getPictures() })
         }.flowOn(Dispatchers.IO)
     }
 

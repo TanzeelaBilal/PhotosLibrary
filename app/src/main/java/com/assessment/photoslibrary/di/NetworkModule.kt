@@ -2,6 +2,9 @@ package com.assessment.photoslibrary.di
 
 import com.assessment.photoslibrary.data.remote.ApiService
 import com.assessment.photoslibrary.utils.Constants.Companion.BASE_URL
+import com.assessment.photoslibrary.utils.Constants.Companion.BASIC_URL
+import com.google.gson.FieldNamingPolicy
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,26 +23,31 @@ object NetworkModule {
     fun provideHttpClient(): OkHttpClient {
         return OkHttpClient
             .Builder()
-            .readTimeout(15, TimeUnit.SECONDS)
-            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
             .build()
     }
 
     @Singleton
     @Provides
     fun provideConverterFactory(): GsonConverterFactory =
-         GsonConverterFactory.create()
+        GsonConverterFactory.create()
 
     @Singleton
     @Provides
     fun provideRetrofit(
-        okHttpClient: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory
+        okHttpClient: OkHttpClient
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(BASIC_URL)
             .client(okHttpClient)
-            .addConverterFactory(gsonConverterFactory)
+            .addConverterFactory(
+                GsonConverterFactory.create(
+                    GsonBuilder()
+                        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                        .create()
+                )
+            )
             .build()
     }
 

@@ -2,6 +2,7 @@ package com.assessment.photoslibrary.ui.fragment.list
 
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,23 +11,23 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import coil.ImageLoader
-import coil.load
 import coil.request.Disposable
 import coil.request.ImageRequest
-import coil.transform.RoundedCornersTransformation
 import com.assessment.photoslibrary.R
+import com.assessment.photoslibrary.model.response.PhotoModel
+import com.assessment.photoslibrary.ui.adapter.PhotosListAdapter
 import com.assessment.photoslibrary.utils.NetworkResult
 import com.assessment.photoslibrary.viewmodel.list.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_photos_list.imgDog
-import kotlinx.android.synthetic.main.fragment_photos_list.pbDog
+import kotlinx.android.synthetic.main.fragment_photos_list.list_view
+import kotlinx.android.synthetic.main.fragment_photos_list.pbLoader
 import java.io.File
 
 @AndroidEntryPoint
 class PhotosListFragment : Fragment() {
 
     private lateinit var disposable: Disposable
-    private var imageUrl: String? = null
+    private var photosListResponse: List<PhotoModel>? = null
     private val viewModel by viewModels<MainViewModel>()
 
     companion object {
@@ -47,38 +48,41 @@ class PhotosListFragment : Fragment() {
     }
 
     private fun fetchResponse() {
-        viewModel.fetchDogResponse()
-        pbDog.visibility = View.VISIBLE
+        viewModel.fetchPhotosResponse()
+        pbLoader.visibility = View.VISIBLE
     }
 
 
     private fun fetchData() {
         fetchResponse()
-        viewModel.response.observe(this.requireActivity()) { response ->
+        viewModel.response.observe(this) { response ->
             when (response) {
                 is NetworkResult.Success -> {
                     response.data?.let {
-                        imageUrl = response.data.message
-                        imgDog.load(
-                            response.data.message
-                        ) {
-                            transformations(RoundedCornersTransformation(16f))
-                        }
+                        photosListResponse = response.data.photos.photo
+                        list_view.adapter =
+                            photosListResponse?.let { it1 ->
+                                PhotosListAdapter(
+                                    requireContext(),
+                                    it1
+                                )
+                            }
                     }
-                    pbDog.visibility = View.GONE
+                    pbLoader.visibility = View.GONE
                 }
 
                 is NetworkResult.Error -> {
-                    pbDog.visibility = View.GONE
+                    pbLoader.visibility = View.GONE
                     Toast.makeText(
                         activity,
                         response.message,
                         Toast.LENGTH_SHORT
                     ).show()
+                    response.message?.let { Log.e("error", it) }
                 }
 
                 is NetworkResult.Loading -> {
-                    pbDog.visibility = View.VISIBLE
+                    pbLoader.visibility = View.VISIBLE
                 }
             }
         }
