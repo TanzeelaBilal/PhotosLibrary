@@ -3,15 +3,16 @@
         android:id="@+id/android_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:padding="2dp">
 
     <ImageView
             android:id="@+id/listview_image"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_200dp"
+            android:layout_width="@dimen/_70dp"
+            android:layout_height="@dimen/_70dp"
             android:layout_marginTop="@dimen/top_margin"
             android:scaleType="fitXY"
+            android:layout_marginLeft="@dimen/_5dp"
             android:contentDescription="@string/app_name"
             android:padding="@dimen/card_padding" />
 
@@ -22,6 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/card_padding"
+                android:layout_gravity="center"
                 android:layout_marginTop="3dp"
                 android:textSize="@dimen/desc_text_size"
                 android:textStyle="bold" />

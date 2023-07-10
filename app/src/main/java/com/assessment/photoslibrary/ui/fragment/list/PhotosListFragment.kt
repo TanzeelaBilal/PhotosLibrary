@@ -12,6 +12,7 @@ import android.view.animation.TranslateAnimation
 import android.widget.AbsListView
 import android.widget.AbsListView.OnScrollListener
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.ListFragment
 import androidx.fragment.app.viewModels
 import com.assessment.photoslibrary.R
@@ -22,6 +23,7 @@ import com.assessment.photoslibrary.ui.fragment.detailspage.PhotoDetailsFragment
 import com.assessment.photoslibrary.utils.NetworkResult
 import com.assessment.photoslibrary.viewmodel.list.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_photos_list.footer
 import kotlinx.android.synthetic.main.fragment_photos_list.pbLoader
 
 
@@ -42,19 +44,27 @@ class PhotosListFragment : ListFragment() {
     private var anim: TranslateAnimation? = null
 
     companion object {
-        fun newInstance() = PhotosListFragment()
+        private const val TITLE = "TITLE"
+
+        fun newInstance(title: String) = PhotosListFragment().apply {
+            arguments = Bundle().apply {
+                putString(TITLE, title)
+            }
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setCallBack()
         return inflater.inflate(R.layout.fragment_photos_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setListViewHeader()
+        setFooterText()
         fetchData()
     }
 
@@ -181,7 +191,28 @@ class PhotosListFragment : ListFragment() {
 
     private fun setListViewListener() {
         listView.setOnItemClickListener { parent, view, position, id ->
-            (activity as PhotosListActivity).changeFragment(PhotoDetailsFragment.newInstance())
+            photosListResponse?.get(position)
+                ?.let {
+                    PhotoDetailsFragment.newInstance(it)
+                }
+                ?.let { (activity as PhotosListActivity).changeFragment(it) }
         }
+    }
+
+    private fun setFooterText() {
+        footer.text = arguments?.getString("TITLE")
+    }
+
+    private fun setCallBack() {
+        // Create the callback
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        }
+
+        // Add the callback to the activity's OnBackPressedDispatcher
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
     }
 }

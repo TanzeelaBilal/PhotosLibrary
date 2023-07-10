@@ -18,13 +18,14 @@ class PhotosListActivity : AppCompatActivity() {
         _binding = ActivityPhotosListBinding.inflate(layoutInflater)
         setContentView(_binding.root)
         if (savedInstanceState == null) {
-           changeFragment(PhotosListFragment.newInstance())
+           changeFragment(PhotosListFragment.newInstance(resources.getString(R.string.title)))
         }
     }
 
     fun changeFragment(fragment : Fragment){
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, fragment)
-            .commitNow()
+            .addToBackStack(null)
+            .commit()
     }
 }

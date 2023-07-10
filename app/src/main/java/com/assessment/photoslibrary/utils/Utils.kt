@@ -1,27 +1,10 @@
 package com.assessment.photoslibrary.utils
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
+import com.assessment.photoslibrary.model.response.PhotoModel
 
 object Utils {
 
-    fun hasInternetConnection(context: Context?): Boolean {
-        if (context == null)
-            return false
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE)
-                as ConnectivityManager
-
-        val activeNetwork = connectivityManager.activeNetwork ?: return false
-        val networkCapabilities =
-            connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-
-        return when {
-            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            else -> false
-        }
+    fun getImageUrl(photo: PhotoModel): String {
+        return "https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg"
     }
-
 }

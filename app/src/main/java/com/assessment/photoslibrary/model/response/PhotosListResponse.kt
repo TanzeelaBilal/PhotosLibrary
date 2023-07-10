@@ -1,6 +1,8 @@
 package com.assessment.photoslibrary.model.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
 data class PhotosListResponse(
     @SerializedName("photos")
@@ -20,6 +22,7 @@ data class PhotosMetaData(
     val photo: List<PhotoModel>
 )
 
+@Parcelize
 data class PhotoModel(
     @SerializedName("id")
     val id: String,
@@ -34,10 +37,10 @@ data class PhotoModel(
     @SerializedName("title")
     val title: String,
     @SerializedName("ispublic")
-    val ispublic: String,
+    val ispublic: Int,
     @SerializedName("isfriend")
-    val isfriend: String,
+    val isfriend: Int,
     @SerializedName("isfamily")
-    val isfamily: String
+    val isfamily: Int
 
-)
+) : Parcelable

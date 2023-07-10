@@ -9,10 +9,11 @@
 
     <ImageView
             android:id="@+id/listview_image"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/top_margin"
             android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher_background"
             android:contentDescription="@string/app_name"
             android:padding="@dimen/land_padding" />
 

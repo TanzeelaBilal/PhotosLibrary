@@ -10,6 +10,7 @@ import android.widget.TextView
 import coil.load
 import com.assessment.photoslibrary.R
 import com.assessment.photoslibrary.model.response.PhotoModel
+import com.assessment.photoslibrary.utils.Utils.getImageUrl
 import kotlinx.android.synthetic.main.item_photos_listview.view.listview_image
 import kotlinx.android.synthetic.main.item_photos_listview.view.listview_item_title
 
@@ -57,10 +58,6 @@ class PhotosListAdapter(context: Context, photoModel: List<PhotoModel>) :
         holder.img?.load(getImageUrl(photoModel[position]))
 
         return rowView!!
-    }
-
-    fun getImageUrl(photo: PhotoModel): String {
-        return "https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg"
     }
 
     class Holder {
