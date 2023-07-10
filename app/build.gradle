@@ -45,6 +45,7 @@ dependencies {
     def daggerHiltVersion = '2.31.2-alpha'
     def hiltLifeCycleVersion = '1.0.0-alpha03'
     def coilVersion = '1.2.2'
+    def mockitoVersion = '3.11.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.5.0'
@@ -92,5 +93,8 @@ dependencies {
 
     //for image rendering
     implementation "io.coil-kt:coil:$coilVersion"
+
+    //test
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
 
 }
