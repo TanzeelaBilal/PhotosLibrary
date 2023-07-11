@@ -8,7 +8,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import coil.load
 import com.assessment.photoslibrary.R
-import com.assessment.photoslibrary.model.response.PhotoModel
+import com.assessment.photoslibrary.model.response.Photo
 import com.assessment.photoslibrary.ui.activity.list.PhotosListActivity
 import com.assessment.photoslibrary.ui.fragment.list.PhotosListFragment
 import com.assessment.photoslibrary.utils.Utils
@@ -28,14 +28,14 @@ import kotlinx.android.synthetic.main.fragment_details_photo.tvTitle
 @AndroidEntryPoint
 class PhotoDetailsFragment : Fragment() {
 
-    var photoModel: PhotoModel? = null
+    var photoModel: Photo? = null
 
     companion object {
         private const val PHOTO_MODEL = "PHOTO_MODEL"
 
-        fun newInstance(photoModel: PhotoModel) = PhotoDetailsFragment().apply {
+        fun newInstance(photo: Photo) = PhotoDetailsFragment().apply {
             arguments = Bundle().apply {
-                putParcelable(PHOTO_MODEL, photoModel)
+                putParcelable(PHOTO_MODEL, photo)
             }
         }
     }

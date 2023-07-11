@@ -1,16 +1,13 @@
 package com.assessment.photoslibrary.data.remote
 
-import com.assessment.photoslibrary.model.response.PhotoModel
+import com.assessment.photoslibrary.model.response.Photo
 import com.assessment.photoslibrary.model.response.PhotosListResponse
-import com.assessment.photoslibrary.model.response.PhotosMetaData
+import com.assessment.photoslibrary.model.response.Photos
 import kotlinx.coroutines.runBlocking
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -30,9 +27,9 @@ class RemoteDataSourceTest {
     @Test
     fun `test getPhotos success`() {
         val photosListResponse =
-            PhotosListResponse(PhotosMetaData("1", "10", "100", "1000", listOf<PhotoModel>()))
+            PhotosListResponse(Photos("1", "10", "100", "1000", listOf<Photo>()))
         val response = Response.success(photosListResponse)
-        Mockito.`when`(runBlocking { apiService.getPhotosList() }).thenReturn(response)
+        Mockito.`when`(runBlocking { apiService.getRecentPhotos() }).thenReturn(response)
 
         val result = runBlocking { remoteDataSource.getPictures() }
 
@@ -42,10 +39,12 @@ class RemoteDataSourceTest {
 
     @Test
     fun `test getUser failure`() {
-        val response = Response.error<PhotosListResponse>( 404, ResponseBody.create("application/json".toMediaTypeOrNull(), ""))
+        val response = Response.error<PhotosListResponse>(
+            404,
+            "".toResponseBody("application/json".toMediaTypeOrNull())
+        )
 
-
-        Mockito.`when`(runBlocking { apiService.getPhotosList() }).thenReturn(response)
+        Mockito.`when`(runBlocking { apiService.getRecentPhotos() }).thenReturn(response)
 
         val result = runBlocking { remoteDataSource.getPictures() }
 

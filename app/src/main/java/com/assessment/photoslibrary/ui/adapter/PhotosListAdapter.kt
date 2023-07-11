@@ -9,20 +9,29 @@ import android.widget.ImageView
 import android.widget.TextView
 import coil.load
 import com.assessment.photoslibrary.R
-import com.assessment.photoslibrary.model.response.PhotoModel
+import com.assessment.photoslibrary.model.response.Photo
 import com.assessment.photoslibrary.utils.Utils.getImageUrl
 import kotlinx.android.synthetic.main.item_photos_listview.view.listview_image
 import kotlinx.android.synthetic.main.item_photos_listview.view.listview_item_title
 
 
-class PhotosListAdapter(context: Context, photoModel: List<PhotoModel>) :
+class PhotosListAdapter(context: Context) :
     BaseAdapter() {
-    private val photoModel: List<PhotoModel>
+    private var photoModel: MutableList<Photo> = mutableListOf()
     private val context: Context
 
     init {
-        this.photoModel = photoModel
         this.context = context
+    }
+
+    fun addItem(photo: Photo) {
+        this.photoModel.add(photo)
+        notifyDataSetChanged()
+    }
+
+    fun updateList(photo: List<Photo>) {
+        this.photoModel = photo as MutableList<Photo>
+        notifyDataSetChanged()
     }
 
     override fun getCount(): Int {

@@ -6,24 +6,24 @@ import kotlinx.android.parcel.Parcelize
 
 data class PhotosListResponse(
     @SerializedName("photos")
-    val photos: PhotosMetaData
+    val photos: Photos
 )
 
-data class PhotosMetaData(
+data class Photos(
     @SerializedName("page")
-    val page: String,
+    val page: Int,
     @SerializedName("pages")
-    val pages: String,
+    val pages: Int,
     @SerializedName("perpage")
-    val perpage: String,
+    val perpage: Int,
     @SerializedName("total")
-    val total: String,
+    val total: Int,
     @SerializedName("photo")
-    val photo: List<PhotoModel>
+    val photo: List<Photo>
 )
 
 @Parcelize
-data class PhotoModel(
+data class Photo(
     @SerializedName("id")
     val id: String,
     @SerializedName("owner")

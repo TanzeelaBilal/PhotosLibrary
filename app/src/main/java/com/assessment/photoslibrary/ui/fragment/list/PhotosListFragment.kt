@@ -3,6 +3,7 @@ package com.assessment.photoslibrary.ui.fragment.list
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +17,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.ListFragment
 import androidx.fragment.app.viewModels
 import com.assessment.photoslibrary.R
-import com.assessment.photoslibrary.model.response.PhotoModel
+import com.assessment.photoslibrary.model.response.Photo
+import com.assessment.photoslibrary.model.response.PhotosListResponse
 import com.assessment.photoslibrary.ui.activity.list.PhotosListActivity
 import com.assessment.photoslibrary.ui.adapter.PhotosListAdapter
 import com.assessment.photoslibrary.ui.fragment.detailspage.PhotoDetailsFragment
@@ -30,8 +32,9 @@ import kotlinx.android.synthetic.main.fragment_photos_list.pbLoader
 @AndroidEntryPoint
 class PhotosListFragment : ListFragment() {
 
-    private var photosListResponse: List<PhotoModel>? = null
+    private var photosListResponse: List<Photo> = listOf()
     private val viewModel by viewModels<MainViewModel>()
+    lateinit var adapter: PhotosListAdapter
     private var mCachedVerticalScrollRange = 0
     private var mQuickReturnHeight = 0
 
@@ -42,6 +45,11 @@ class PhotosListFragment : ListFragment() {
     private var mScrollY = 0
     private var mMinRawY = 0
     private var anim: TranslateAnimation? = null
+
+    private var totalPages = 0
+    val itemsPerPage = 10
+    var currentItemCount = 0
+    private var currentPage = 1
 
     companion object {
         private const val TITLE = "TITLE"
@@ -64,26 +72,19 @@ class PhotosListFragment : ListFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setListViewHeader()
+        setListViewListener()
         setFooterText()
-        fetchData()
+        fetchData(currentPage)
     }
 
-    private fun fetchData() {
-        fetchResponse()
+    private fun fetchData(currentPage: Int) {
+        fetchResponse(currentPage)//for pagination
         viewModel.response.observe(this) { response ->
             when (response) {
                 is NetworkResult.Success -> {
                     response.data?.let {
-                        photosListResponse = response.data.photos.photo
-                        //setListViewHeader()
-                        listView.adapter =
-                            photosListResponse?.let { it1 ->
-                                PhotosListAdapter(
-                                    requireContext(),
-                                    it1
-                                )
-                            }
-                        setListViewListener()
+                        if (it != null)
+                            handlePhotosResponse(it)
                     }
                     pbLoader.visibility = View.GONE
                 }
@@ -105,8 +106,17 @@ class PhotosListFragment : ListFragment() {
         }
     }
 
-    private fun fetchResponse() {
-        viewModel.fetchPhotosResponse()
+    private fun handlePhotosResponse(it: PhotosListResponse) {
+        photosListResponse = it.photos.photo
+        totalPages = it.photos.pages
+        adapter = PhotosListAdapter(requireContext())
+        adapter.updateList(loadNextItems(0))
+        listView.adapter = adapter
+
+    }
+
+    private fun fetchResponse(currentPage: Int) {
+        viewModel.fetchPhotosResponse(currentPage)
         pbLoader.visibility = View.VISIBLE
     }
 
@@ -114,6 +124,7 @@ class PhotosListFragment : ListFragment() {
         var mListView = listView
 
         val header: View = layoutInflater.inflate(R.layout.item_header_listview, null)
+
         mListView.addHeaderView(header)
         mListView.viewTreeObserver.addOnGlobalLayoutListener(
             OnGlobalLayoutListener {
@@ -127,6 +138,14 @@ class PhotosListFragment : ListFragment() {
                 view: AbsListView?, firstVisibleItem: Int,
                 visibleItemCount: Int, totalItemCount: Int
             ) {
+                //load next batch when page reaches end
+                val lastVisibleItem = firstVisibleItem + visibleItemCount
+                if (lastVisibleItem >= totalItemCount && totalItemCount > currentItemCount) {
+                    // Reached the end of the list, load the next items
+                    val nextPage = totalItemCount / itemsPerPage
+                    loadNextItems(nextPage)
+                }
+
                 mScrollY = 0
                 var translationY = 0
 
@@ -185,22 +204,44 @@ class PhotosListFragment : ListFragment() {
                 }
             }
 
-            override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {}
+            override fun onScrollStateChanged(view: AbsListView?, scroll_state: Int) {
+            }
         })
     }
 
+
     private fun setListViewListener() {
         listView.setOnItemClickListener { parent, view, position, id ->
-            photosListResponse?.get(position)
-                ?.let {
-                    PhotoDetailsFragment.newInstance(it)
-                }
-                ?.let { (activity as PhotosListActivity).changeFragment(it) }
+            if (position != 0) //exclude header
+                photosListResponse.get(position - 1)
+                    .let {
+                        PhotoDetailsFragment.newInstance(it)
+                    }
+                    .let { (activity as PhotosListActivity).changeFragment(it) }
         }
     }
 
     private fun setFooterText() {
         footer.text = arguments?.getString("TITLE")
+    }
+
+    fun loadNextItems(page: Int): List<Photo> {
+        val startIndex = page * itemsPerPage
+        val endIndex = startIndex + itemsPerPage
+        var tempList = mutableListOf<Photo>()
+
+        // Simulate loading delay
+        Handler().postDelayed({
+            // Add the next batch of items to the list
+            for (i in startIndex until endIndex) {
+                if (i < photosListResponse.size) {
+                    adapter.addItem(photosListResponse[i])
+                    tempList.add(photosListResponse[i])
+                    currentItemCount++
+                }
+            }
+        }, 10) // Delay in milliseconds to simulate loading time
+        return tempList
     }
 
     private fun setCallBack() {

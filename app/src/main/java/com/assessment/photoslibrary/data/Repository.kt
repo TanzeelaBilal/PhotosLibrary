@@ -3,7 +3,6 @@ package com.assessment.photoslibrary.data
 import android.graphics.Bitmap
 import com.assessment.photoslibrary.data.remote.RemoteDataSource
 import com.assessment.photoslibrary.model.BaseApiResponse
-import com.assessment.photoslibrary.model.DogResponse
 import com.assessment.photoslibrary.model.response.PhotosListResponse
 import com.assessment.photoslibrary.utils.NetworkResult
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -22,9 +21,9 @@ class Repository @Inject constructor(
     private val remoteDataSource: RemoteDataSource
 ) : BaseApiResponse() {
 
-    suspend fun getPictureList(): Flow<NetworkResult<PhotosListResponse>> {
-        return flow<NetworkResult<PhotosListResponse>> {
-            emit(safeApiCall { remoteDataSource.getPictures() })
+    suspend fun getPictureList(page: Int): Flow<NetworkResult<PhotosListResponse>> {
+        return flow {
+            emit(safeApiCall { remoteDataSource.getPictures(page) })
         }.flowOn(Dispatchers.IO)
     }
 
