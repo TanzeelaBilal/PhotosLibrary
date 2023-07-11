@@ -96,5 +96,5 @@ dependencies {
 
     //test
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
-
+    testImplementation "org.mockito:mockito-inline:2.8.47"
 }
