@@ -27,11 +27,11 @@ class RemoteDataSourceTest {
     @Test
     fun `test getPhotos success`() {
         val photosListResponse =
-            PhotosListResponse(Photos("1", "10", "100", "1000", listOf<Photo>()))
+            PhotosListResponse(Photos(1, 10, 100, 100, listOf<Photo>()))
         val response = Response.success(photosListResponse)
-        Mockito.`when`(runBlocking { apiService.getRecentPhotos() }).thenReturn(response)
+        Mockito.`when`(runBlocking { apiService.getRecentPhotos(page = 1) }).thenReturn(response)
 
-        val result = runBlocking { remoteDataSource.getPictures() }
+        val result = runBlocking { remoteDataSource.getPictures(page = 1) }
 
         assertNotNull(result)
         assertEquals(response, result)
@@ -44,9 +44,9 @@ class RemoteDataSourceTest {
             "".toResponseBody("application/json".toMediaTypeOrNull())
         )
 
-        Mockito.`when`(runBlocking { apiService.getRecentPhotos() }).thenReturn(response)
+        Mockito.`when`(runBlocking { apiService.getRecentPhotos(page = 1) }).thenReturn(response)
 
-        val result = runBlocking { remoteDataSource.getPictures() }
+        val result = runBlocking { remoteDataSource.getPictures(page = 1) }
 
         assertEquals(response, result)
     }
