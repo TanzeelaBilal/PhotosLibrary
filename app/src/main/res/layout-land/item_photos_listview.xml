@@ -4,7 +4,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:padding="2dp">
 
     <ImageView
@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/land_padding"
             android:layout_marginTop="3dp"
+            android:layout_gravity="center"
             android:textSize="@dimen/desc_text_size"
             android:textStyle="bold" />
 

@@ -1,91 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <ImageView
-            android:id="@+id/imgMain"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_200dp"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="@dimen/_30dp"
-            android:layout_marginStart="@dimen/_10dp"
-            android:layout_marginEnd="@dimen/_10dp" />
-
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="@dimen/_30dp"
-            android:layout_marginStart="@dimen/_10dp"
-            android:layout_marginEnd="@dimen/_10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/imgMain">
+            android:layout_marginLeft="@dimen/_5dp"
+            android:layout_height="match_parent">
+
+        <ImageView
+                android:id="@+id/imgMain"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_200dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/_30dp"
+                android:layout_marginStart="@dimen/_10dp"
+                android:layout_marginEnd="@dimen/_10dp" />
 
 
-        <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:textSize="@dimen/text_heading"
-                android:layout_height="@dimen/_70dp"
-                android:textStyle="bold"
-                android:src="@drawable/ic_refresh" />
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="@dimen/_30dp"
+                android:layout_marginStart="@dimen/_10dp"
+                android:layout_marginEnd="@dimen/_10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/imgMain">
 
-        <TextView
-                android:id="@+id/tvId"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_50dp"
-                android:src="@drawable/ic_refresh" />
 
-        <TextView
-                android:id="@+id/tvOwner"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_50dp"
-                android:src="@drawable/ic_refresh" />
+            <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:textSize="@dimen/text_heading"
+                    android:layout_height="@dimen/_50dp"
+                    android:textStyle="bold"
+                    android:src="@drawable/ic_refresh" />
 
-        <TextView
-                android:id="@+id/tvSecret"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_50dp"
-                android:src="@drawable/ic_refresh" />
+            <TextView
+                    android:id="@+id/tvId"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30dp"
+                    android:src="@drawable/ic_refresh" />
 
-        <TextView
-                android:id="@+id/tvServer"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_50dp"
-                android:src="@drawable/ic_refresh" />
+            <TextView
+                    android:id="@+id/tvOwner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30dp"
+                    android:src="@drawable/ic_refresh" />
 
-        <TextView
-                android:id="@+id/tvFarm"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_50dp"
-                android:src="@drawable/ic_refresh" />
+            <TextView
+                    android:id="@+id/tvSecret"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30dp"
+                    android:src="@drawable/ic_refresh" />
 
-        <TextView
-                android:id="@+id/tvIsPublic"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_50dp"
-                android:src="@drawable/ic_refresh" />
+            <TextView
+                    android:id="@+id/tvServer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30dp"
+                    android:src="@drawable/ic_refresh" />
 
-        <TextView
-                android:id="@+id/tvIsFriend"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_50dp"
-                android:src="@drawable/ic_refresh" />
+            <TextView
+                    android:id="@+id/tvFarm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30dp"
+                    android:src="@drawable/ic_refresh" />
 
-        <TextView
-                android:id="@+id/tvIsFamily"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_50dp"
-                android:src="@drawable/ic_refresh" />
+            <TextView
+                    android:id="@+id/tvIsPublic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30dp"
+                    android:src="@drawable/ic_refresh" />
 
-    </LinearLayout>
+            <TextView
+                    android:id="@+id/tvIsFriend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30dp"
+                    android:src="@drawable/ic_refresh" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                    android:id="@+id/tvIsFamily"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30dp"
+                    android:src="@drawable/ic_refresh" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
