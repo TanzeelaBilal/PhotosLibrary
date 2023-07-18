@@ -47,7 +47,7 @@ class PhotosListFragment : ListFragment() {
     private var anim: TranslateAnimation? = null
 
     private var totalPages = 0
-    val itemsPerPage = 10
+    val itemsPerPage = 40
     var currentItemCount = 0
     private var currentPage = 1
 
@@ -110,7 +110,7 @@ class PhotosListFragment : ListFragment() {
         photosListResponse = it.photos.photo
         totalPages = it.photos.pages
         adapter = PhotosListAdapter(requireContext())
-        adapter.updateList(loadNextItems(0))
+        adapter.updateList(mutableListOf())
         listView.adapter = adapter
 
     }
@@ -122,7 +122,7 @@ class PhotosListFragment : ListFragment() {
 
     private fun setListViewHeader() {
         var mListView = listView
-
+        var preLast = 0
         val header: View = layoutInflater.inflate(R.layout.item_header_listview, null)
 
         mListView.addHeaderView(header)
@@ -140,10 +140,13 @@ class PhotosListFragment : ListFragment() {
             ) {
                 //load next batch when page reaches end
                 val lastVisibleItem = firstVisibleItem + visibleItemCount
-                if (lastVisibleItem >= totalItemCount && totalItemCount > currentItemCount) {
+                if (lastVisibleItem >= totalItemCount && photosListResponse.size > currentItemCount) {
                     // Reached the end of the list, load the next items
-                    val nextPage = totalItemCount / itemsPerPage
-                    loadNextItems(nextPage)
+                    if (preLast != lastVisibleItem) {
+                        val nextPage = totalItemCount / itemsPerPage
+                        loadNextItems(nextPage)
+                        preLast = lastVisibleItem
+                    }
                 }
 
                 mScrollY = 0
